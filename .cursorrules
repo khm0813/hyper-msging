@@ -1,0 +1,153 @@
+# Cursor Rules - 토이 프로젝트 개발 가이드
+
+## \[Project]
+
+name = "통합 트레이딩 허브 토이 프로젝트"
+description = "HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 모듈을 FastAPI로 통합하는 마이크로서비스 프로젝트"
+
+## \[Environment]
+
+# Python 및 런타임 버전
+
+python\_version = "3.11"
+dotenv\_file = ".env"
+
+## \[Dependencies]
+
+# 필수 라이브러리 목록
+
+# 백엔드
+
+* fastapi
+* uvicorn\[standard]
+* sqlmodel
+* pydantic
+* httpx
+* redis
+
+# HyperEVM
+
+* etherspy (ethers.py)
+
+# Discord
+
+* discord.py
+
+# Twitter
+
+* tweepy or httpx
+
+# Meteora
+
+* meteora-dlmm-sdk (TypeScript) -> wrap via subprocess or REST
+
+# Polymarket
+
+* polymarket-python
+
+# Kalshi
+
+* cryptography
+* requests
+
+# 테스트
+
+* pytest
+* respx
+* pytest-mock
+* coverage
+
+# 린트 및 타입체크
+
+* black
+* flake8
+* mypy
+
+## \[Framework]
+
+use\_fastapi = true
+folder\_structure = \[
+"app/",
+"app/api/",
+"app/core/",
+"app/services/",
+"tests/",
+"docker/"
+]
+config\_class = "app.config.Settings"
+
+## \[Architecture]
+
+design\_first = true
+architecture\_diagram\_required = true
+modules = \[
+"hyperevm",
+"redis\_pubsub",
+"discord\_notifier",
+"twitter\_notifier",
+"meteora",
+"polymarket",
+"kalshi"]
+enable\_msa = true
+
+## \[Development vs Production]
+
+# 개발/운영 환경 분리
+
+env\_modes = \["development", "production"]
+dev\_settings = "app.config.DevSettings"
+prod\_settings = "app.config.ProdSettings"
+strict\_mode = true  # AI가 승인되지 않은 라이브러리나 버전을 자동으로 사용하지 않도록 강제
+
+## \[Testing & Documentation]
+
+unit\_tests = true
+integration\_tests = true
+test\_framework = "pytest"
+http\_mock\_library = "respx"
+coverage\_threshold = 80
+require\_docstrings = true  # 모든 함수/클래스에 docstring 필수
+generate\_docs = true       # sphinx 또는 mkdocs 사용 권장
+
+enforce\_test\_for\_all\_modules = true
+
+## \[Code Style & CI]
+
+lint = \["black --check", "flake8"]
+type\_check = "mypy --strict"
+async\_required = true
+ci\_enabled = true
+ci\_workflow = \[
+"checkout",
+"setup-python\@3.11",
+"install-deps",
+"lint",
+"mypy",
+"pytest --cov=app",
+"build-docker"]
+
+## \[CursorAI Integration]
+
+generate\_module\_skeleton = true      # 모듈 스켈레톤 코드 생성
+generate\_test\_templates = true       # 테스트 템플릿 생성
+suggest\_refactorings = true          # 코드 개선 제안
+suggest\_commit\_messages = true       # 깔끔한 커밋 메시지 제안
+generate\_openapi\_docs = true         # OpenAPI 문서 보완 도움
+strict\_imports = true                # AI가 허용된 의존성 외 자동 설치 제한
+
+## \[Security]
+
+do\_not\_hardcode\_tokens = true
+use\_base\_settings\_for\_secrets = true
+
+## \[Deployment]
+
+# Docker Compose 개발/운영 파일 분리
+
+docker\_compose\_dev = "docker-compose.dev.yml"
+docker\_compose\_prod = "docker-compose.prod.yml"
+services = \["backend", "redis", "db"]
+
+
+
+# 끝
