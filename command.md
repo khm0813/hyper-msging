@@ -3,6 +3,12 @@ curl -sSL https://install.python-poetry.org | python3 -
 
 (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
 
+# Conda
+conda install python=3.11.0
+conda update --all
+conda activate py3_11
+conda deactivate
+
 # 의존성 설치
 poetry install
 
