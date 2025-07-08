@@ -7,7 +7,7 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def patch_get_price(monkeypatch):
     async def fake_get_price(market_id: int):
-        return 123.456
+        return {"symbol": "FAKE", "price": 123.456}
     monkeypatch.setattr("app.api.price.get_price", fake_get_price)
 
 
@@ -17,6 +17,7 @@ def test_read_price():
     data = response.json()
     assert data["market_id"] == 1
     assert data["price"] == 123.456
+    assert "symbol" in data
 
 
 def test_negative_market_id():
