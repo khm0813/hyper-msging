@@ -87,6 +87,7 @@ $RECYCLE.BIN/
 # dotenv
 .env
 .env.*
+!.env.example
 
 # Docker
 *.log
