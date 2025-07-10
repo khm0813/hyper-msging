@@ -18,6 +18,8 @@ poetry run uvicorn app.main:app --reload
 
 # 테스트
 poetry run pytest
+poetry run pytest -s -v
+poetry run pytest -s -v tests/test_trading.py::test_gen_wallet_success
 
 
 #
