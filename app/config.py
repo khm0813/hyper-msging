@@ -8,9 +8,7 @@ class Settings(BaseSettings):
     HYPERLIQUID_WS_URL: str = "wss://api.hyperliquid.xyz/ws"
     
     # API 인증 (필요시)
-    HYPERLIQUID_API_KEY: str = ""
-    HYPERLIQUID_SECRET_KEY: str = ""
-    HYPERLIQUID_API_ADDRESS: str = ""
+    HYPERLIQUID_API_ADDRESS: str = ""   
     HYPERLIQUID_API_PRIVATE: str = ""
     
     # Redis 설정 (실시간 데이터 캐싱용)

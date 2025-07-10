@@ -42,6 +42,89 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+### 2. 심볼별 펀딩비/이자율 조회
+
+- **Endpoint:**  
+  `GET /price/funding/{symbol}`
+
+- **설명:**  
+  Hyperliquid 마켓의 심볼별 펀딩비(이자율) 정보를 조회합니다.
+
+- **Path Parameter:**  
+  - `symbol` (str): 코인 심볼 (예: BTC, ETH)
+
+- **Response 예시:**
+  ```json
+  {
+    "symbol": "BTC",
+    "funding": 0.0000125
+  }
+  ```
+
+- **오류 응답 예시:**
+  - 잘못된 심볼:
+    ```json
+    { "detail": "Invalid symbol" }
+    ```
+  - 존재하지 않는 심볼:
+    ```json
+    { "detail": "Symbol not found: NOTREAL" }
+    ```
+  - Upstream API 오류:
+    ```json
+    { "detail": "Upstream RPC error" }
+    ```
+
+---
+
+### 2. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
+
+- **Endpoint:**  
+  `GET /price/asset_ctx/{symbol}`
+
+- **설명:**  
+  Hyperliquid 마켓의 심볼별 트레이딩 주요 지표(컨텍스트) 정보를 조회합니다. (펀딩비, 미결제약정, 마크가격, 오라클가격, 프리미엄, 24시간 거래량 등)
+
+- **Path Parameter:**  
+  - `symbol` (str): 코인 심볼 (예: BTC, ETH)
+
+- **Response 예시:**
+  ```json
+  {
+    "symbol": "BTC",
+    "funding": 0.0000125,
+    "openInterest": 34345.24704,
+    "markPx": 108889.0,
+    "midPx": 108889.5,
+    "oraclePx": 108859.0,
+    "premium": 0.0002755858,
+    "prevDayPx": 108232.0,
+    "dayNtlVlm": 2138608387.4016401768,
+    "impactPxs": [108889.0, 108890.0],
+    "dayBaseVlm": 19671.09977
+  }
+  ```
+
+- **오류 응답 예시:**
+  - 잘못된 심볼:
+    ```json
+    { "detail": "Invalid symbol" }
+    ```
+  - 존재하지 않는 심볼:
+    ```json
+    { "detail": "Symbol not found: NOTREAL" }
+    ```
+  - Upstream API 오류:
+    ```json
+    { "detail": "Upstream RPC error" }
+    ```
+
+---
+
+
+
+---
+
 ## 🛠️ 사용한 주요 외부 라이브러리
 
 | 역할            | 라이브러리/도구         |

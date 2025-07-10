@@ -89,3 +89,55 @@ async def is_valid_symbol(symbol: str) -> bool:
     if not _symbol_list:
         await get_symbols()
     return symbol in _symbol_list
+
+async def get_asset_ctx(symbol: str) -> dict:
+    """
+    Hypeliquid에서 심볼별 트레이딩 주요 지표(컨텍스트) 정보를 조회한다.
+    - symbol: 조회할 코인 심볼 (예: "BTC")
+    - 반환 예시:
+      {
+        "symbol": "BTC",
+        "funding": 0.0000125,
+        "openInterest": 34345.24704,
+        "markPx": 108889.0,
+        "midPx": 108889.5,
+        "oraclePx": 108859.0,
+        "premium": 0.0002755858,
+        "prevDayPx": 108232.0,
+        "dayNtlVlm": 2138608387.4016401768,
+        "impactPxs": [108889.0, 108890.0],
+        "dayBaseVlm": 19671.09977
+      }
+    - symbol이 없으면 ValueError 발생
+    """
+    url = f"{settings.HYPERLIQUID_API_URL}/info"
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(url, json={"type": "metaAndAssetCtxs"})
+        resp.raise_for_status()
+        data = resp.json()
+        universe = data[0]["universe"]
+        asset_ctxs = data[1]
+        symbol_to_idx = {asset["name"]: idx for idx, asset in enumerate(universe)}
+        idx = symbol_to_idx.get(symbol)
+        if idx is None:
+            raise ValueError(f"Symbol not found: {symbol}")
+        ctx = asset_ctxs[idx]
+    # 필요한 필드만 float 변환 및 반환
+    def f(x):
+        try:
+            return float(x)
+        except Exception:
+            return x
+    return {
+        "symbol": symbol,
+        "funding": f(ctx.get("funding")),
+        "openInterest": f(ctx.get("openInterest")),
+        "markPx": f(ctx.get("markPx")),
+        "midPx": f(ctx.get("midPx")),
+        "oraclePx": f(ctx.get("oraclePx")),
+        "premium": f(ctx.get("premium")),
+        "prevDayPx": f(ctx.get("prevDayPx")),
+        "dayNtlVlm": f(ctx.get("dayNtlVlm")),
+        "impactPxs": [f(x) for x in ctx.get("impactPxs", [])],
+        "dayBaseVlm": f(ctx.get("dayBaseVlm")),
+    }
