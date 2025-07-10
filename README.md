@@ -7,7 +7,61 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ## 📚 주요 API 사용법
 
-### 1. 실시간 가격 조회
+### 1. 지갑 생성 및 입금주소 생성
+
+- **Endpoint:**  
+  `GET /trading/gen_wallet`
+
+- **설명:**  
+  새로운 이더리움 지갑을 생성하고, Hyperliquid 거래를 위한 ETH/SOL 입금주소를 생성합니다. 생성된 입금주소는 Hyperunit API를 통해 검증된 서명과 함께 반환됩니다.
+
+- **Response 예시:**
+  ```json
+  {
+    "wallet": {
+      "address": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+      "private_key": "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    },
+    "deposit_address": {
+      "ETH": {
+        "address": "0x3F344...",
+        "signatures": {
+          "field-node": "A/o6b5CTyjyV4MVDtt15+/c4078OHCf8vatkHs8wQm3dX6Gs784br5uUoCnATXYG94RwBiHpaEOLlJiDyMzH2A==",
+          "hl-node": "roOKVA5o4O+MsKfqWB1yHnII6jyysIdEIuSSEHFlV2QYTKHvPC6rQPqhsZ1m1kCm3Zq4lUKykRZzpnU0bx1dsg==",
+          "unit-node": "JO44LIE5Q4DpNzw9nsKmgTKqpm7M8wsMTCqgSUJ3LpTWvd0wQDVh+H7VTJb87Zf0gZiu/JkKCK1Tf4+IabzZgw=="
+        },
+        "status": "OK"
+      },
+      "SOL": {
+        "address": "0x5A2b3...",
+        "signatures": {
+          "field-node": "B/o6b5CTyjyV4MVDtt15+/c4078OHCf8vatkHs8wQm3dX6Gs784br5uUoCnATXYG94RwBiHpaEOLlJiDyMzH2A==",
+          "hl-node": "soOKVA5o4O+MsKfqWB1yHnII6jyysIdEIuSSEHFlV2QYTKHvPC6rQPqhsZ1m1kCm3Zq4lUKykRZzpnU0bx1dsg==",
+          "unit-node": "KO44LIE5Q4DpNzw9nsKmgTKqpm7M8wsMTCqgSUJ3LpTWvd0wQDVh+H7VTJb87Zf0gZiu/JkKCK1Tf4+IabzZgw=="
+        },
+        "status": "OK"
+      }
+    }
+  }
+  ```
+
+- **오류 응답 예시:**
+  - ETH 입금주소 생성 실패:
+    ```json
+    { "detail": "ETH 입금 주소 생성 실패" }
+    ```
+  - SOL 입금주소 생성 실패:
+    ```json
+    { "detail": "SOL 입금 주소 생성 실패" }
+    ```
+  - Upstream API 오류:
+    ```json
+    { "detail": "Upstream RPC error" }
+    ```
+
+---
+
+### 2. 실시간 가격 조회
 
 - **Endpoint:**  
   `GET /price/{market_id}`
@@ -42,7 +96,7 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
-### 2. 심볼별 펀딩비/이자율 조회
+### 3. 심볼별 펀딩비/이자율 조회
 
 - **Endpoint:**  
   `GET /price/funding/{symbol}`
@@ -77,7 +131,7 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
-### 2. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
+### 4. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
 
 - **Endpoint:**  
   `GET /price/asset_ctx/{symbol}`

@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     HYPEREVM_RPC_URL: str = "https://rpc.hyperliquid.xyz/evm"
     HYPERLIQUID_API_URL: str = "https://api.hyperliquid.xyz"
     HYPERLIQUID_WS_URL: str = "wss://api.hyperliquid.xyz/ws"
+    HYPERUNIT_API_URL: str = "https://api.hyperunit.xyz"
     
     # API 인증 (필요시)
     HYPERLIQUID_API_ADDRESS: str = ""   
