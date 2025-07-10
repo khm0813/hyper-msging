@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException
+
+from fastapi import APIRouter, Query, HTTPException
 import httpx
 from web3 import Web3, Account
 from app.config import settings
@@ -6,6 +7,104 @@ from app.core.hyperunit_client import verify_signatures, verify_deposit_address_
 
 
 router = APIRouter()
+
+
+@router.get("/wallet_balance")
+async def wallet_balance(address: str = Query(..., description="Hyperliquid 지갑 주소 (0x...)")):
+    """
+    Hyperliquid 지갑의 현재 잔고를 조회합니다.
+    
+    Args:
+        address: Hyperliquid 지갑 주소 (0x...)
+        
+    Returns:
+        지갑 잔고 정보 (계정 가치, 포지션, 출금 가능 금액 등)
+    """
+    # Hyperliquid API는 POST 요청을 사용하며, clearinghouseState 타입으로 사용자 잔고 조회
+    async with httpx.AsyncClient() as client:
+        try:
+            # POST 요청으로 사용자 잔고 조회
+            payload = {
+                "type": "clearinghouseState",
+                "user": address.lower()  # 주소를 소문자로 변환
+            }
+            
+            resp = await client.post(
+                "https://api.hyperliquid.xyz/info",
+                json=payload,
+                timeout=30.0
+            )
+            
+            if resp.status_code != 200:
+                print(f"Hyperliquid API 에러 코드: {resp.status_code}")
+                print(f"응답 본문: {resp.text}")
+                raise HTTPException(
+                    status_code=resp.status_code,
+                    detail=f"Hyperliquid API 응답이 비정상: {resp.text[:300]}"
+                )
+            
+            try:
+                data = resp.json()
+            except Exception as e:
+                print(f"JSON 파싱 실패! 에러: {e}, 본문: {resp.text[:300]}")
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Hyperliquid API JSON 파싱 실패: {resp.text[:300]}"
+                )
+            
+            # 응답 데이터 구조 분석 및 반환
+            margin_summary = data.get("marginSummary", {})
+            cross_margin_summary = data.get("crossMarginSummary", {})
+            asset_positions = data.get("assetPositions", [])
+            withdrawable = data.get("withdrawable", "0.0")
+            
+            # 계정 가치가 0이면 잔고가 없는 것으로 판단
+            account_value = float(margin_summary.get("accountValue", "0.0"))
+            
+            if account_value == 0.0:
+                return {
+                    "address": address,
+                    "balance": {
+                        "account_value": "0.0",
+                        "withdrawable": "0.0",
+                        "total_margin_used": "0.0",
+                        "asset_positions": [],
+                        "message": "잔고 없음 또는 신규 지갑"
+                    }
+                }
+            
+            return {
+                "address": address,
+                "balance": {
+                    "account_value": margin_summary.get("accountValue", "0.0"),
+                    "withdrawable": withdrawable,
+                    "total_margin_used": margin_summary.get("totalMarginUsed", "0.0"),
+                    "total_notional_position": margin_summary.get("totalNtlPos", "0.0"),
+                    "total_raw_usd": margin_summary.get("totalRawUsd", "0.0"),
+                    "asset_positions": asset_positions,
+                    "cross_margin_summary": cross_margin_summary,
+                    "timestamp": data.get("time")
+                }
+            }
+            
+        except httpx.TimeoutException:
+            raise HTTPException(
+                status_code=504,
+                detail="Hyperliquid API 요청 시간 초과"
+            )
+        except httpx.RequestError as e:
+            print(f"Hyperliquid API 요청 실패: {e}")
+            raise HTTPException(
+                status_code=502,
+                detail=f"Hyperliquid API 연결 실패: {str(e)}"
+            )
+        except Exception as e:
+            print(f"예상치 못한 오류: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"서버 내부 오류: {str(e)}"
+            )
+
 
 @router.get("/gen_wallet")
 async def gen_wallet():

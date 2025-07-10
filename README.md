@@ -61,7 +61,78 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
-### 2. 실시간 가격 조회
+
+### 2. 지갑 잔고 조회
+
+- **Endpoint:**  
+  `GET /trading/wallet_balance`
+
+- **설명:**  
+  Hyperliquid 지갑의 현재 잔고를 조회합니다. 계정 가치, 출금 가능 금액, 마진 사용량, 자산 포지션 등의 상세 정보를 반환합니다.
+
+- **Query Parameter:**  
+  - `address` (str): Hyperliquid 지갑 주소 (0x...)
+
+- **Response 예시 (잔고가 있는 경우):**
+  ```json
+  {
+    "address": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "balance": {
+      "account_value": "1000.50",
+      "withdrawable": "800.40",
+      "total_margin_used": "200.10",
+      "total_notional_position": "500.25",
+      "total_raw_usd": "1000.50",
+      "asset_positions": [
+        {
+          "coin": "USDC",
+          "position": "1000.50",
+          "notionalUsd": "1000.50"
+        }
+      ],
+      "cross_margin_summary": {
+        "accountValue": "1000.50",
+        "totalNtlPos": "500.25",
+        "totalRawUsd": "1000.50",
+        "totalMarginUsed": "200.10"
+      },
+      "timestamp": 1752146173198
+    }
+  }
+  ```
+
+- **Response 예시 (잔고가 없는 경우):**
+  ```json
+  {
+    "address": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "balance": {
+      "account_value": "0.0",
+      "withdrawable": "0.0",
+      "total_margin_used": "0.0",
+      "asset_positions": [],
+      "message": "잔고 없음 또는 신규 지갑"
+    }
+  }
+  ```
+
+- **오류 응답 예시:**
+  - 주소 파라미터 누락:
+    ```json
+    { "detail": "Field required" }
+    ```
+  - API 연결 실패:
+    ```json
+    { "detail": "Hyperliquid API 연결 실패" }
+    ```
+  - 요청 시간 초과:
+    ```json
+    { "detail": "Hyperliquid API 요청 시간 초과" }
+    ```
+
+---
+
+### 3. 실시간 가격 조회
+
 
 - **Endpoint:**  
   `GET /price/{market_id}`
@@ -96,7 +167,9 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
-### 3. 심볼별 펀딩비/이자율 조회
+
+### 4. 심볼별 펀딩비/이자율 조회
+
 
 - **Endpoint:**  
   `GET /price/funding/{symbol}`
@@ -131,7 +204,9 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
-### 4. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
+
+### 5. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
+
 
 - **Endpoint:**  
   `GET /price/asset_ctx/{symbol}`
