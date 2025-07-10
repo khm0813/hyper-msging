@@ -6,11 +6,10 @@ class Settings(BaseSettings):
     HYPEREVM_RPC_URL: str = "https://rpc.hyperliquid.xyz/evm"
     HYPERLIQUID_API_URL: str = "https://api.hyperliquid.xyz"
     HYPERLIQUID_WS_URL: str = "wss://api.hyperliquid.xyz/ws"
+    HYPERUNIT_API_URL: str = "https://api.hyperunit.xyz"
     
     # API 인증 (필요시)
-    HYPERLIQUID_API_KEY: str = ""
-    HYPERLIQUID_SECRET_KEY: str = ""
-    HYPERLIQUID_API_ADDRESS: str = ""
+    HYPERLIQUID_API_ADDRESS: str = ""   
     HYPERLIQUID_API_PRIVATE: str = ""
     
     # Redis 설정 (실시간 데이터 캐싱용)
