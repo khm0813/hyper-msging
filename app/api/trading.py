@@ -1,3 +1,4 @@
+
 from fastapi import APIRouter, Query, HTTPException
 import httpx
 from web3 import Web3, Account
@@ -6,6 +7,7 @@ from app.core.hyperunit_client import verify_signatures, verify_deposit_address_
 
 
 router = APIRouter()
+
 
 @router.get("/wallet_balance")
 async def wallet_balance(address: str = Query(..., description="Hyperliquid 지갑 주소 (0x...)")):

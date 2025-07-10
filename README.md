@@ -61,6 +61,7 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+
 ### 2. 지갑 잔고 조회
 
 - **Endpoint:**  
@@ -132,6 +133,7 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ### 3. 실시간 가격 조회
 
+
 - **Endpoint:**  
   `GET /price/{market_id}`
 
@@ -165,7 +167,9 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+
 ### 4. 심볼별 펀딩비/이자율 조회
+
 
 - **Endpoint:**  
   `GET /price/funding/{symbol}`
@@ -200,7 +204,9 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+
 ### 5. 심볼별 트레이딩 주요 지표(컨텍스트) 조회
+
 
 - **Endpoint:**  
   `GET /price/asset_ctx/{symbol}`

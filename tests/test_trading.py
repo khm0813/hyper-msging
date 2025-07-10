@@ -6,7 +6,6 @@ from app.main import app
 
 client = TestClient(app)
 
-
 @pytest.fixture
 def mock_hyperliquid_response():
     """Hyperliquid API 응답 모킹"""
