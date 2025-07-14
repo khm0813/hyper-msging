@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     HYPERLIQUID_API_ADDRESS: str = ""   
     HYPERLIQUID_API_PRIVATE: str = ""
     
+    # 테스트용 private key (실제 운영시에는 환경변수로 관리)
+    TEST_PRIVATE_KEY: str = "0x2329dac374d63a8bc515664cb8f8fe8d388942259fd8ad48bae821febd85d040"
+    
     # Redis 설정 (실시간 데이터 캐싱용)
     REDIS_URL: str = "redis://localhost:6379"
     REDIS_DB: int = 0

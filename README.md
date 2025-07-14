@@ -175,6 +175,267 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+### 5. Long/Short 포지션 주문 실행
+
+- **Endpoint:**  
+  `POST /trading/place_order`
+
+- **설명:**  
+  HyperUnit을 통한 Long/Short 포지션 주문을 실행합니다.
+
+- **Request Body:**
+  ```json
+  {
+    "symbol": "BTC",
+    "side": "buy",  // "buy" (Long) 또는 "sell" (Short)
+    "size": 1000.0,  // 포지션 크기 (USD)
+    "price": 108000.0,  // 지정가 주문시에만 (시장가 주문시 생략)
+    "order_type": "market",  // "market" 또는 "limit"
+    "reduce_only": false,  // 포지션 감소만 허용
+    "time_in_force": "Gtc"  // Good till cancelled
+  }
+  ```
+
+- **Response 예시:**
+  ```json
+  {
+    "success": true,
+    "order_id": "order_1705123456",
+    "symbol": "BTC",
+    "side": "buy",
+    "size": 1000.0,
+    "price": null,
+    "order_type": "market",
+    "status": "submitted",
+    "timestamp": 1705123456
+  }
+  ```
+
+- **오류 응답 예시:**
+  - 잘못된 side:
+    ```json
+    { "detail": "side must be 'buy' or 'sell'" }
+    ```
+  - 잘못된 order_type:
+    ```json
+    { "detail": "order_type must be 'market' or 'limit'" }
+    ```
+  - 지정가 주문시 가격 누락:
+    ```json
+    { "detail": "price is required for limit orders" }
+    ```
+
+---
+
+### 6. 포지션 정보 조회
+
+- **Endpoint:**  
+  `GET /trading/positions/{address}`
+
+- **설명:**  
+  특정 지갑 주소의 포지션 정보를 조회합니다. **실제 Hyperliquid API를 사용하여 실시간 데이터를 반환합니다.**
+
+- **Path Parameter:**  
+  - `address` (str): 조회할 지갑 주소
+
+- **실제 Response 예시:**
+  ```json
+  {
+    "address": "0x208546F8bca93fCb99afc382CB2abA829aFE9fD5",
+    "positions": [
+      {
+        "symbol": "BTC",
+        "side": "short",
+        "size": 0.00065,
+        "entry_price": 121121.0,
+        "mark_price": 121121.0,
+        "unrealized_pnl": -0.11635,
+        "realized_pnl": 0.0,
+        "liquidation_price": null
+      }
+    ],
+    "total_unrealized_pnl": -0.11635,
+    "total_realized_pnl": 0.0
+  }
+  ```
+
+- **사용 예시:**
+  ```bash
+  curl -X GET "http://localhost:8000/trading/positions/0x208546F8bca93fCb99afc382CB2abA829aFE9fD5"
+  ```
+
+---
+
+### 7. 계정 정보 조회
+
+- **Endpoint:**  
+  `GET /trading/account/{address}`
+
+- **설명:**  
+  계정의 잔고, 마진, 포지션 등 전체 정보를 조회합니다. **실제 Hyperliquid API를 사용하여 실시간 데이터를 반환합니다.**
+
+- **Path Parameter:**  
+  - `address` (str): 조회할 지갑 주소
+
+- **실제 Response 예시:**
+  ```json
+  {
+    "address": "0x208546F8bca93fCb99afc382CB2abA829aFE9fD5",
+    "total_balance": 0.00065,
+    "available_balance": 0.0,
+    "margin_used": 0.00065,
+    "margin_ratio": 1.0,
+    "positions": [
+      {
+        "symbol": "BTC",
+        "side": "short",
+        "size": 0.00065,
+        "entry_price": 121121.0,
+        "mark_price": 121121.0,
+        "unrealized_pnl": -0.06305,
+        "realized_pnl": 0.0,
+        "liquidation_price": null
+      }
+    ]
+  }
+  ```
+
+- **사용 예시:**
+  ```bash
+  # 주어진 private key로 지갑 주소 계산
+  # Private Key: 0x2329dac374d63a8bc515664cb8f8fe8d388942259fd8ad48bae821febd85d040
+  # Wallet Address: 0x208546F8bca93fCb99afc382CB2abA829aFE9fD5
+  
+  curl -X GET "http://localhost:8000/trading/account/0x208546F8bca93fCb99afc382CB2abA829aFE9fD5"
+  ```
+
+---
+
+### 8. 포지션 종료 (비율 기반)
+
+- **Endpoint:**  
+  `POST /trading/close_position`
+
+- **설명:**  
+  특정 포지션을 비율 기반으로 종료합니다. **실제 Hyperliquid API를 사용하여 실시간 데이터를 처리합니다.**
+
+- **Request Body:**
+  ```json
+  {
+    "symbol": "BTC",
+    "address": "0x208546F8bca93fCb99afc382CB2abA829aFE9fD5",
+    "side": "short",  // "long" 또는 "short" (생략시 모든 포지션)
+    "ratio": 0.5,     // 종료할 비율 (0.0 ~ 1.0, 기본값: 1.0 = 전체 종료)
+    "price": 121000.0, // 지정가 종료시 가격 (시장가 종료시 생략)
+    "order_type": "market"  // "market" 또는 "limit"
+  }
+  ```
+
+- **실제 Response 예시:**
+  ```json
+  {
+    "success": true,
+    "symbol": "BTC",
+    "side": "short",
+    "ratio": 0.5,
+    "orders": [
+      {
+        "order_id": "close_1752468841_0",
+        "symbol": "BTC",
+        "side": "buy",
+        "size": 0.000325,
+        "price": null,
+        "order_type": "market",
+        "status": "submitted",
+        "reduce_only": true
+      }
+    ],
+    "total_closed_size": 0.000325,
+    "status": "submitted",
+    "message": "Position close orders submitted for BTC"
+  }
+  ```
+
+- **사용 예시:**
+  ```bash
+  # 50% 비율로 BTC Short 포지션 종료
+  curl -X POST "http://localhost:8000/trading/close_position" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "symbol": "BTC",
+      "address": "0x208546F8bca93fCb99afc382CB2abA829aFE9fD5",
+      "side": "short",
+      "ratio": 0.5,
+      "order_type": "market"
+    }'
+  
+  # 전체 포지션 종료
+  curl -X POST "http://localhost:8000/trading/close_position" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "symbol": "BTC",
+      "address": "0x208546F8bca93fCb99afc382CB2abA829aFE9fD5",
+      "ratio": 1.0,
+      "order_type": "market"
+    }'
+  ```
+
+- **오류 응답 예시:**
+  - 잘못된 비율:
+    ```json
+    { "detail": "ratio must be between 0.0 and 1.0" }
+    ```
+  - 잘못된 주문 타입:
+    ```json
+    { "detail": "order_type must be 'market' or 'limit'" }
+    ```
+  - 지정가 주문시 가격 누락:
+    ```json
+    { "detail": "price is required for limit orders" }
+    ```
+  - 포지션 없음:
+    ```json
+    { "detail": "Failed to close position: No position found for BTC short" }
+    ```
+
+---
+
+### 9. 주문 내역 조회
+
+- **Endpoint:**  
+  `GET /trading/order_history/{address}`
+
+- **설명:**  
+  특정 주소의 주문 내역을 조회합니다.
+
+- **Path Parameter:**  
+  - `address` (str): 조회할 지갑 주소
+
+- **Query Parameter:**  
+  - `limit` (int, optional): 조회할 주문 수 (기본값: 50)
+
+- **Response 예시:**
+  ```json
+  {
+    "address": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
+    "orders": [
+      {
+        "order_id": "order_123",
+        "symbol": "BTC",
+        "side": "buy",
+        "size": 1000.0,
+        "price": 108000.0,
+        "order_type": "market",
+        "status": "filled",
+        "timestamp": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "total_count": 1
+  }
+  ```
+
+---
+
 
 
 ---
