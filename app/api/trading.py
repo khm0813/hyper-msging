@@ -109,6 +109,7 @@ async def wallet_balance(address: str = Query(..., description="Hyperliquid 지�
             )
 
 
+
 # Pydantic 모델 정의
 class OrderRequest(BaseModel):
     """주문 요청 모델"""
