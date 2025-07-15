@@ -49,7 +49,7 @@ async def debug_hyperliquid_api():
     print("\n2. 사용자 정보가 필요한 API 테스트...")
     
     # 테스트 주소 (정규화된 형식)
-    test_address = "0x2329dac374d63a8bc515664cb8f8fe8d388942259fd8ad48bae821febd85d040"
+    test_address = "0x2329dac374d63a8bc515664cb8f8fe8d388942259fd8ad48bae8___"
     normalized_address = test_address.lower().replace("0x", "")
     
     print(f"원본 주소: {test_address}")

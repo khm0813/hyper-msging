@@ -378,10 +378,8 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 - **사용 예시:**
   ```bash
   # 주어진 private key로 지갑 주소 계산
-  # Private Key: 0x2329dac374d63a8bc515664cb8f8fe8d388942259fd8ad48bae821febd85d040
-  # Wallet Address: 0x208546F8bca93fCb99afc382CB2abA829aFE9fD5
   
-  curl -X GET "http://localhost:8000/trading/account/0x208546F8bca93fCb99afc382CB2abA829aFE9fD5"
+  curl -X GET "http://localhost:8000/trading/account/"
   ```
 
 ---
