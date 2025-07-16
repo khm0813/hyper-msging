@@ -171,7 +171,8 @@ async def gen_wallet():
     '''
     # ETH 입금주소 생성 GET https://api.hyperunit.xyz/gen/ethereum/hyperliquid/eth/0xYourHLAddress
     url = f"{settings.HYPERUNIT_API_URL}/gen/ethereum/hyperliquid/eth/{account.address}"
-    response = httpx.get(url)
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
     response.raise_for_status()
     '''
     ETH: {
@@ -213,7 +214,8 @@ async def gen_wallet():
 
     # SOL 입금 주소 생성 GET https://api.hyperunit.xyz/gen/solana/hyperliquid/sol/0xYourHLAddress
     url = f"{settings.HYPERUNIT_API_URL}/gen/solana/hyperliquid/sol/{account.address}"
-    response = httpx.get(url)
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
     response.raise_for_status()
     sol_data = response.json()
     print(f"SOL deposit address generated: {sol_data['address']}")
