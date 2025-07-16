@@ -1,6 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, AsyncMock
 import base64
 import time
 from app.main import app
@@ -162,7 +162,7 @@ def test_wallet_balance_invalid_address():
 
 
 # gen_wallet 함수 테스트
-@patch('httpx.get')
+@patch('httpx.AsyncClient.get', new_callable=AsyncMock)
 def test_gen_wallet_success(mock_get):
     """지갑 생성 성공 테스트"""
     # Mock 설정
