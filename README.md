@@ -5,6 +5,30 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 
 ---
 
+
+  # API 키 설정
+  export GITHUB_TOKEN=ghp_abcdefghijklmnopqrstuvwxyz123456
+  export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+  export GCP_API_KEY=AIzaSyDaGmWKa4JsXZ-HjGw98765432123456789
+
+  # 서비스 토큰
+  export SLACK_TOKEN=xoxb-123456789012-123456789012-abcdefghijklmnopqrstuvwx
+
+  설정 파일 예시
+
+  {
+    "database": {
+      "url": "postgresql://admin:secretpass123@db.example.com/prod"
+    },
+    "api_keys": {
+      "github": "ghp_reallyLongTokenValueHere123456789012",
+      "aws_secret": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+    }
+  }
+
+
+
+
 ## 📚 주요 API 사용법
 
 ### 1. 지갑 생성 및 입금주소 생성
