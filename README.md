@@ -6,25 +6,16 @@ HyperEVM, Discord, Twitter, Meteora, Polymarket, Kalshi 등 다양한 온체인�
 ---
 
 Test
-  # API 키 설정
-  export GITHUB_TOKEN=ghp_abcdefghijklmnopqrstuvwxyz123456
-  export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-  export GCP_API_KEY=AIzaSyDaGmWKa4JsXZ-HjGw98765432123456789
+## Test Section (임시)
 
-  # 서비스 토큰
-  export SLACK_TOKEN=xoxb-123456789012-123456789012-abcdefghijklmnopqrstuvwx
+  ### Private Key Test
+  ```javascript
+  const testPrivateKey = "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
 
-  설정 파일 예시
+  Mnemonic Test
 
-  {
-    "database": {
-      "url": "postgresql://admin:secretpass123@db.example.com/prod"
-    },
-    "api_keys": {
-      "github": "ghp_reallyLongTokenValueHere123456789012",
-      "aws_secret": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-    }
-  }
+  mnemonic: "abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve"
+
 
 
 
